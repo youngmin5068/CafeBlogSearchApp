@@ -3,27 +3,34 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		FB2F820427846B0F0097788D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F820327846B0F0097788D /* AppDelegate.swift */; };
 		FB2F820627846B0F0097788D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F820527846B0F0097788D /* SceneDelegate.swift */; };
-		FB2F820827846B0F0097788D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F820727846B0F0097788D /* ViewController.swift */; };
-		FB2F820B27846B0F0097788D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB2F820927846B0F0097788D /* Main.storyboard */; };
 		FB2F820D27846B140097788D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB2F820C27846B140097788D /* Assets.xcassets */; };
 		FB2F821027846B140097788D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB2F820E27846B140097788D /* LaunchScreen.storyboard */; };
+		FB2F821927846B710097788D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FB2F821827846B710097788D /* RxSwift */; };
+		FB2F821B27846B710097788D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = FB2F821A27846B710097788D /* RxCocoa */; };
+		FB2F821D27846B710097788D /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = FB2F821C27846B710097788D /* RxRelay */; };
+		FB2F822027846B9A0097788D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FB2F821F27846B9A0097788D /* Kingfisher */; };
+		FB2F822327846BB60097788D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB2F822227846BB60097788D /* SnapKit */; };
+		FB2F822527846C810097788D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F822427846C810097788D /* MainViewController.swift */; };
+		FB2F822727846DBE0097788D /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F822627846DBE0097788D /* SearchBar.swift */; };
+		FB2F8229278472050097788D /* filterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F8228278472050097788D /* filterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FB2F820027846B0F0097788D /* CafeBlogSearchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CafeBlogSearchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB2F820327846B0F0097788D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB2F820527846B0F0097788D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FB2F820727846B0F0097788D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		FB2F820A27846B0F0097788D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FB2F820C27846B140097788D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB2F820F27846B140097788D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB2F821127846B140097788D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB2F822427846C810097788D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		FB2F822627846DBE0097788D /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		FB2F8228278472050097788D /* filterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +38,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB2F822027846B9A0097788D /* Kingfisher in Frameworks */,
+				FB2F821D27846B710097788D /* RxRelay in Frameworks */,
+				FB2F821B27846B710097788D /* RxCocoa in Frameworks */,
+				FB2F821927846B710097788D /* RxSwift in Frameworks */,
+				FB2F822327846BB60097788D /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,8 +70,9 @@
 			children = (
 				FB2F820327846B0F0097788D /* AppDelegate.swift */,
 				FB2F820527846B0F0097788D /* SceneDelegate.swift */,
-				FB2F820727846B0F0097788D /* ViewController.swift */,
-				FB2F820927846B0F0097788D /* Main.storyboard */,
+				FB2F822427846C810097788D /* MainViewController.swift */,
+				FB2F822627846DBE0097788D /* SearchBar.swift */,
+				FB2F8228278472050097788D /* filterView.swift */,
 				FB2F820C27846B140097788D /* Assets.xcassets */,
 				FB2F820E27846B140097788D /* LaunchScreen.storyboard */,
 				FB2F821127846B140097788D /* Info.plist */,
@@ -83,6 +96,13 @@
 			dependencies = (
 			);
 			name = CafeBlogSearchApp;
+			packageProductDependencies = (
+				FB2F821827846B710097788D /* RxSwift */,
+				FB2F821A27846B710097788D /* RxCocoa */,
+				FB2F821C27846B710097788D /* RxRelay */,
+				FB2F821F27846B9A0097788D /* Kingfisher */,
+				FB2F822227846BB60097788D /* SnapKit */,
+			);
 			productName = CafeBlogSearchApp;
 			productReference = FB2F820027846B0F0097788D /* CafeBlogSearchApp.app */;
 			productType = "com.apple.product-type.application";
@@ -110,6 +130,11 @@
 				Base,
 			);
 			mainGroup = FB2F81F727846B0F0097788D;
+			packageReferences = (
+				FB2F821727846B710097788D /* XCRemoteSwiftPackageReference "RxSwift" */,
+				FB2F821E27846B9A0097788D /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				FB2F822127846BB60097788D /* XCRemoteSwiftPackageReference "snapkit" */,
+			);
 			productRefGroup = FB2F820127846B0F0097788D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -126,7 +151,6 @@
 			files = (
 				FB2F821027846B140097788D /* LaunchScreen.storyboard in Resources */,
 				FB2F820D27846B140097788D /* Assets.xcassets in Resources */,
-				FB2F820B27846B0F0097788D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +161,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB2F820827846B0F0097788D /* ViewController.swift in Sources */,
+				FB2F822527846C810097788D /* MainViewController.swift in Sources */,
+				FB2F822727846DBE0097788D /* SearchBar.swift in Sources */,
 				FB2F820427846B0F0097788D /* AppDelegate.swift in Sources */,
+				FB2F8229278472050097788D /* filterView.swift in Sources */,
 				FB2F820627846B0F0097788D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,14 +172,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		FB2F820927846B0F0097788D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FB2F820A27846B0F0097788D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FB2F820E27846B140097788D /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -341,6 +359,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FB2F821727846B710097788D /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
+			};
+		};
+		FB2F821E27846B9A0097788D /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.2;
+			};
+		};
+		FB2F822127846BB60097788D /* XCRemoteSwiftPackageReference "snapkit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/snapkit/snapkit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FB2F821827846B710097788D /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB2F821727846B710097788D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		FB2F821A27846B710097788D /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB2F821727846B710097788D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		FB2F821C27846B710097788D /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB2F821727846B710097788D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		FB2F821F27846B9A0097788D /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB2F821E27846B9A0097788D /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		FB2F822227846BB60097788D /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB2F822127846BB60097788D /* XCRemoteSwiftPackageReference "snapkit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FB2F81F827846B0F0097788D /* Project object */;
 }
