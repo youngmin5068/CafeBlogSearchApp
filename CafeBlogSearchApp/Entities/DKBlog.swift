@@ -26,8 +26,8 @@ struct DKDocument: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         self.title = try? values.decode(String?.self, forKey: .title)
-        self.name = try? values.decode(String?.self, forKey: .title)
-        self.thumbnail = try? values.decode(String?.self, forKey: .title)
+        self.name = try? values.decode(String?.self, forKey: .name)
+        self.thumbnail = try? values.decode(String?.self, forKey: .thumbnail)
         self.datetime = Date.parse(values, key: .datetime)
         
     }

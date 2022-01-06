@@ -61,7 +61,7 @@ class BlogListCell: UITableViewCell {
     
     
     func setData(_ data: BlogListCellData) {
-        thumbnailImageView.kf.setImage(with: data.thumbnailURl, placeholder: UIImage(systemName: "photo"))
+        thumbnailImageView.kf.setImage(with: data.thumbnailURL, placeholder: UIImage(systemName: "photo"))
         nameLabel.text = data.name
         titleLabel.text = data.title
         

@@ -8,7 +8,7 @@
 import Foundation
 
 struct BlogListCellData {
-    let thumbnailURl: URL? //썸네일 이미지
+    let thumbnailURL: URL? //썸네일 이미지
     let name: String?
     let title: String?
     let datetime: Date?
