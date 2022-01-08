@@ -4,23 +4,20 @@
 //
 //  Created by 김영민 on 2022/01/04.
 //
-import UIKit
+
 import RxSwift
 import RxCocoa
-import SnapKit
+import UIKit
 
-class MainViewController : UIViewController {
+class MainViewController: UIViewController {
     let disposeBag = DisposeBag()
     
-    let listView = BlogList()
+    let listView = BlogListView()
     let searchBar = SearchBar()
     
-    let alertActionTapped = PublishRelay<AlertAction>()
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        super .init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        bind()
         attribute()
         layout()
     }
@@ -29,141 +26,47 @@ class MainViewController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func bind() {
+    func bind(_ viewModel: MainViewModel) {
+        listView.bind(viewModel.blogListViewModel)
+        searchBar.bind(viewModel.searchBarViewModel)
         
-        let blogResult = searchBar.shouldLoadResult
-            .flatMapLatest{ query in
-                SearchBlogNetwork().searchBlog(query: query)
-            }
-            .share() // 공부
-        
-        let blogValue = blogResult
-            .compactMap{ data -> DKBlog? in
-                guard case .success(let value) = data else {
-                    return nil
-                }
-                return value
-            }
-        
-        let blogError = blogResult
-            .compactMap{ data -> String? in
-                guard case .failure(let error) = data else {
-                    return nil
-                }
-                return error.localizedDescription//string으로 뱉겠다
-            }
-        
-        
-        //네트워크를 통해 가져온 값을 cellData로 변환
-        
-        let cellData = blogValue
-            .map{ blog -> [BlogListCellData] in
-                return blog.documents
-                    .map{
-                        let thumbnailURL = URL(string: $0.thumbnail ?? "")
-                        return BlogListCellData(thumbnailURL: thumbnailURL,
-                                                name: $0.name,
-                                                title: $0.title,
-                                                datetime: $0.datetime)
-                    }
-            }
-        
-        
-        //FilterView를 선택했을 때 나오는 alertsheet를 선택했을 때 type
-        
-        let sortedType = alertActionTapped
-            .filter{
-                switch $0 {
-                case .title, .datetime:
-                    return true
-                default:
-                    return false
-                }
-            }
-            .startWith(.title)
-        
-        
-        //MainViewController -> ListView로 뿌려줌
-        Observable
-            .combineLatest(
-                sortedType,
-                cellData
-            ){type, data -> [BlogListCellData] in
-                switch type {
-                case .title:
-                    return data.sorted{$0.title ?? "" < $1.title ?? ""}
-                case .datetime:
-                    return data.sorted{$0.datetime ?? Date() < $1.datetime ?? Date()}
-                default:
-                    return data
-                }
-            }
-            .bind(to: listView.cellData)
-            .disposed(by: disposeBag)
-        
-        let alertSheetForSorting = listView.headerView.sortButtonTapped
-            .map{_ -> Alert in
-                return (title: nil, message: nil, actions: [.title, .datetime, .cancel], style: .actionSheet)
-            }
-        
-        let alertForErrorMessage = blogError
-            .map{message -> Alert in
-                return (
-                    title: "앗!",
-                    message:"예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해주세요. \(message)",
-                    actions: [.confirm],
-                    style: .alert
-                )
-            }
-        
-        Observable
-            .merge(
-                alertSheetForSorting,
-                alertForErrorMessage
-                )
-            .asSignal(onErrorSignalWith: .empty())
-            .flatMapLatest{ alert -> Signal<AlertAction> in
+        viewModel.shouldPresentAlert
+            .flatMapLatest { alert -> Signal<MainViewController.AlertAction> in
                 let alertController = UIAlertController(title: alert.title, message: alert.message, preferredStyle: alert.style)
                 return self.presentAlertController(alertController, actions: alert.actions)
-            }.emit(to: alertActionTapped)
+            }
+            .emit(to: viewModel.alertActionTapped)
             .disposed(by: disposeBag)
     }
-    
+
     private func attribute() {
         title = "다음 블로그 검색"
         view.backgroundColor = .white
     }
     
     private func layout() {
-        [searchBar,listView]
-            .forEach{
-                view.addSubview($0)
-            }
+        [searchBar, listView].forEach { view.addSubview($0) }
         
-        searchBar.snp.makeConstraints{
-            $0.top.equalTo(view.safeAreaLayoutGuide) //NavigationBar 밑에
+        searchBar.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
         
-        listView.snp.makeConstraints{
+        listView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
             $0.leading.trailing.bottom.equalToSuperview()
         }
     }
-    
 }
 
-
-//Alert
-
 extension MainViewController {
-    typealias Alert = (title: String?, message: String?, actions:[AlertAction], style: UIAlertController.Style)
-    
+    typealias Alert = (title: String?, message: String?, actions: [AlertAction], style: UIAlertController.Style)
+
     enum AlertAction: AlertActionConvertible {
         case title, datetime, cancel
         case confirm
         
-        var title:String {
+        var title: String {
             switch self {
             case .title:
                 return "Title"
@@ -186,26 +89,28 @@ extension MainViewController {
         }
     }
     
-    func presentAlertController<Action: AlertActionConvertible>(_ alertController: UIAlertController,actions: [Action]) -> Signal<Action> {
-        if actions.isEmpty {return .empty()}
-        
+    func presentAlertController<Action: AlertActionConvertible>(_ alertController: UIAlertController, actions: [Action]) -> Signal<Action> {
+        if actions.isEmpty { return .empty() }
         return Observable
-            .create{[weak self] observer in
-                guard let self = self else {return Disposables.create()}
+            .create { [unowned self] observer in
                 for action in actions {
                     alertController.addAction(
-                        UIAlertAction(title: action.title, style: action.style, handler: { _ in
-                            observer.onNext(action)
-                            observer.onCompleted()
-                        }))
+                        UIAlertAction(
+                            title: action.title,
+                            style: action.style,
+                            handler: { _ in
+                                observer.onNext(action)
+                                observer.onCompleted()
+                            }
+                        )
+                    )
                 }
-                self.present(alertController, animated: true,completion: nil)
+                self.present(alertController, animated: true, completion: nil)
                 
                 return Disposables.create {
-                    alertController.dismiss(animated: true, completion: nil )
+                    alertController.dismiss(animated: true, completion: nil)
                 }
             }
             .asSignal(onErrorSignalWith: .empty())
-    }
-    
+        }
 }

@@ -5,27 +5,17 @@
 //  Created by 김영민 on 2022/01/04.
 //
 
-import UIKit
 import RxSwift
 import RxCocoa
-import SnapKit
+import UIKit
 
-class SearchBar : UISearchBar {
+class SearchBar: UISearchBar {
     let disposeBag = DisposeBag()
-    
     let searchButton = UIButton()
-    
-    //searchBar 버튼 탭 이벤트
-    let searchButtonTapped = PublishRelay<Void>()
-    
-    //searchBar 외부로 내보냄 이벤트
-    var shouldLoadResult = Observable<String>.of("")
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bind()
         attribute()
         layout()
     }
@@ -34,28 +24,23 @@ class SearchBar : UISearchBar {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func bind() {
-        //searchBar search button tapped
-        //button tapped
+    func bind(_ viewModel: SearchBarViewModel) {
+        self.rx.text
+            .bind(to: viewModel.queryText)
+            .disposed(by: disposeBag)
+        
         Observable
             .merge(
                 self.rx.searchButtonClicked.asObservable(),
                 searchButton.rx.tap.asObservable()
             )
-            .bind(to: searchButtonTapped)
+            .bind(to: viewModel.searchButtonTapped)
             .disposed(by: disposeBag)
         
-        
-        searchButtonTapped
+        viewModel.searchButtonTapped
             .asSignal()
             .emit(to: self.rx.endEditing)
             .disposed(by: disposeBag)
-        
-        
-        self.shouldLoadResult = searchButtonTapped
-            .withLatestFrom(self.rx.text) { $1 ?? ""}
-            .filter { !$0.isEmpty }
-            .distinctUntilChanged()
     }
     
     private func attribute() {
@@ -63,26 +48,25 @@ class SearchBar : UISearchBar {
         searchButton.setTitleColor(.systemBlue, for: .normal)
     }
     
-    private func layout(){
+    private func layout() {
         addSubview(searchButton)
         
-        searchTextField.snp.makeConstraints{
+        searchTextField.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(12)
             $0.trailing.equalTo(searchButton.snp.leading).offset(-12)
             $0.centerY.equalToSuperview()
         }
         
-        searchButton.snp.makeConstraints{
+        searchButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(12)
         }
     }
 }
 
-
 extension Reactive where Base: SearchBar {
-    var endEditing: Binder<Void>{
-        return Binder(base){base, _ in
+    var endEditing: Binder<Void> {
+        return Binder(base) { base, _ in
             base.endEditing(true)
         }
     }
