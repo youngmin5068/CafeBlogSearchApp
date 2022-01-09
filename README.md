@@ -13,4 +13,5 @@
 ### 2. 검색 후 화면
 > 검색했을 때 보여지는 모습
 
-![Uploading simulator_screenshot_FB0574EA-8B22-4EB9-8AE1-2DC993426773.png…]()
+
+![simulator_screenshot_041A694D-DA14-4311-9B19-FAF62F9C2AB2](https://user-images.githubusercontent.com/61230321/148673252-352eb845-fe39-4dc2-ae58-57cf6962a112.png)
