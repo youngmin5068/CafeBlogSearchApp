@@ -23,6 +23,7 @@
 
 #### 1) FilterView & FilterViewModel
 
+##### FilterView
 ```swift
     func bind(_ viewModel: FilterViewModel) {
         sortButton.rx.tap // Sort button을 탭하면
@@ -32,7 +33,7 @@
 ```
 - sortButton이 tap되면 뷰모델로 sortButtonTapped애 바인딩 시켜줌 (버튼 누르는 것은 View에서 일어나는 일이기 때문에)
 - View -> ViewModel
-
+##### FilterViewModel
 ```swift
  // View -> ViewModel
     let sortButtonTapped = PublishRelay<Void>() //sort하는 버튼을 눌러서 바인딩 되어 넘어옴
@@ -43,5 +44,61 @@
             .asObservable()
     }
 ```
- - view에서 tap 하여 viewModel의 sortButtonTapped로 바인딩 되면  sortButtonTapped의 PublishRelay 기능에 따라 하나씩 ShouldUpdateType으로 보낸다.
+ - view에서 tap 하여 viewModel의 sortButtonTapped로 바인딩 되면 sortButtonTapped의 PublishRelay 기능에 따라 하나씩 ShouldUpdateType으로 보낸다.
+
+
+#### 2) BlogListView & BlogListViewModel
+
+##### BlogListView
+
+```swift
+let headerView = FilterView(
+        frame: CGRect(
+            origin: .zero,
+            size: CGSize(width: UIScreen.main.bounds.width, height: 50)
+        )
+    )
+```
+- BlogListView의 헤더뷰는 FilterView이다.
+
+```swift
+ 
+    func bind(_ viewModel: BlogListViewModel) {
+        
+        headerView.bind(viewModel.filterViewModel) // BlogList의 헤더뷰는 filterView의 filterViewModel에 바인드
+        
+        //viewModel에서 cellData는 blogListCellData의 PublishSubject의 기능을 통해 BlogListCellData를 하나씩 받아옴
+        viewModel.cellData
+            .asDriver(onErrorJustReturn: [])
+            .drive(self.rx.items) { tv, row, data in
+                let index = IndexPath(row: row, section: 0)
+                let cell = tv.dequeueReusableCell(withIdentifier: "BlogListCell", for: index) as! BlogListCell
+                cell.setData(data)
+                return cell
+            }
+            .disposed(by: disposeBag)
+    }
+```
+- headerView를 BlogListViewModel에 바인딩 시켜준다.
+- viewModel에서 cellData는 ViewModel에서부터 바인딩 받아서 blogListCellData(BlogListViewModel에 있는 값)의 PublishSubject의 기능을 통해 BlogListCellData를 받아옴
+- drive룰 통해 데이터를 받아온다.
+
+##### BlogListViewModel
+
+```swift
+
+   //View -> ViewModel
+    let filterViewModel = FilterViewModel()
+    
+  //ViewModel -> View
+    let blogListCellData = PublishSubject<[BlogListCellData]>()
+    let cellData: Driver<[BlogListCellData]>
+    
+    init() {
+        self.cellData = blogListCellData
+            .asDriver(onErrorJustReturn: [])
+    }
+```
+- blogListCellData를 PublishSubject<[BlogListCellData]>() 로 설정하여 BlgoListCellData를 받아온다.
+- init 안에서 blogListCellData를 Driver로 만들어 cellData에 저장
 
