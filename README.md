@@ -200,5 +200,61 @@ class SearchBlogNetwork {
 - request 설정을 함.
 - session.rx.data를 통해 data를 받아오면 DKBlog에 저장
 - 아니면 실패 반환
+### 5) SearchBar & SearchBarViewModel
+
+#### SearchBar
+
+```Swift
+ self.rx.text
+  .bind(to: viewModel.queryText)
+  .disposed(by: disposeBag)
+```
+- 타이핑 치는 것을 ViewModel로 bind 해줌
+
+```Swift
+    Observable
+            .merge(
+                self.rx.searchButtonClicked.asObservable(),
+                searchButton.rx.tap.asObservable()
+            )
+            .bind(to: viewModel.searchButtonTapped)
+            .disposed(by: disposeBag)
+        
+        viewModel.searchButtonTapped
+            .asSignal()
+            .emit(to: self.rx.endEditing)
+            .disposed(by: disposeBag)
+```
+- rx 자체 기능 중 하나인 searchButtonClicked와, searchButton이 tap 된 것을 Observable로 변환 후 merge
+- viewModel의 SearchButtonTapped에 bind 해줌
+- SearchBarViewModel의 searchButtonTapped를 통해 rx.endEditing을 방출
 
 
+#### SearchBarViewModel
+```Swift
+ let queryText = PublishRelay<String?>()
+    let searchButtonTapped = PublishRelay<Void>()
+    let shouldLoadResult: Observable<String>
+    
+    init() {
+        self.shouldLoadResult = searchButtonTapped
+            .withLatestFrom(queryText) { $1 ?? "" }
+            .filter { !$0.isEmpty }
+            .distinctUntilChanged()
+    }
+```
+- queryText는 View에서 타이핑 친 것을 받아옴
+- searchButtonTapped도 rx.searchButtonClicked와 searchButton.rx.tap를 받음
+- shouldLoadResult 는  .withLatestFrom(queryText) 를 통해 queryText가 끝난 후 searchButtonTapped이 되도록 함
+-  .filter { !$0.isEmpty } 로 빈 값은 필터링 한다.
+-  .distinctUntilChanged() 로 연달아 오는 값을 막음.
+
+
+### 6) MainView & MainViewModel
+
+### MainView 
+```Swift
+    let listView = BlogListView()
+    let searchBar = SearchBar()
+```
+- BlogListView와 SearchBar 저장
