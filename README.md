@@ -109,6 +109,96 @@ let headerView = FilterView(
 
 
 #### 4) DKBlog
-- API 통신을 
+- API 통신을 통해 받아온 정보를 저장하는 구조체
+
+### 5) SearchBlogAPI & SearchBlogNetwork
+
+#### SearchBlogAPI  
+
+``` Swift
+struct SearchBlogAPI {
+    static let scheme = "https"
+    static let host = "dapi.kakao.com"
+    static let path = "/v2/search/"
+    
+    func searchBlog(query: String) -> URLComponents {
+        var components = URLComponents()
+        components.scheme = SearchBlogAPI.scheme
+        components.host = SearchBlogAPI.host
+        components.path = SearchBlogAPI.path + "blog"
+        
+        components.queryItems = [
+            URLQueryItem(name:"query",value: query)
+        ]
+        
+        return components
+    }
+}
+```
+- scheme, host , path를 저장 (Developers kakao의 문서에서 확인 가능)
+- URLComponents를 return하는 함수를 만들어서 저장한다.
+
+#### SearchBlogNetwork
+
+``` swift
+enum SearchNetworkError: Error {
+    case invalidJSON
+    case networkError
+    case invalidURL
+    
+    var message: String {
+        switch self {
+        case .invalidURL, .invalidJSON:
+            return "데이터를 불러올 수 없습니다."
+        case .networkError:
+            return "네트워크 상태를 확인해주세요."
+        }
+    }
+}
+
+
+class SearchBlogNetwork {
+    private let session: URLSession
+    let api = SearchBlogAPI()
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
+    
+    func searchBlog(query: String) -> Single<Result<DKBlog, SearchNetworkError>> {
+        guard let url = api.searchBlog(query: query).url else {
+            return .just(.failure(.invalidURL))
+        }
+        
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("KakaoAK 05a26cb7d0a9977f4cb650127321abea", forHTTPHeaderField: "Authorization")
+        
+        return session.rx.data(request: request as URLRequest)
+            .map{ data in
+                do {
+                    let blogData = try JSONDecoder().decode(DKBlog.self,
+                                                            from: data)
+                    return .success(blogData)
+                }catch {
+                    return .failure(.invalidJSON)
+                }
+            }
+            .catch{ _ in
+                .just(.failure(.networkError))
+            }
+            .asSingle()
+    }
+}
+```
+
+- enum으로 SearchNetworkError 만들기
+- api에 위에서 만든 SearchBlogAPI()를 저장
+- URLSession을 .shared 한다.
+- Single<Result<DKBlog, SearchNetworkError>> 는 성공했을 때는 DKBlog, 실패하면 SearchNetworkError를 방출한다.
+- api의 searchBlog의 query를 받아 .url을 통해 url로 만들어 url 변수에 저장
+- request 설정을 함.
+- session.rx.data를 통해 data를 받아오면 DKBlog에 저장
+- 아니면 실패 반환
 
 
