@@ -102,3 +102,13 @@ let headerView = FilterView(
 - blogListCellData를 PublishSubject<[BlogListCellData]>() 로 설정하여 BlgoListCellData를 받아온다.
 - init 안에서 blogListCellData를 Driver로 만들어 cellData에 저장
 
+
+
+#### 3) BlogListCellData
+- Decoding 되어 받아오는 DKBlog의 값을 받아오는 구조체
+
+
+#### 4) DKBlog
+- API 통신을 
+
+
